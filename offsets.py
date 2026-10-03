@@ -17,7 +17,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from gate import CACHE, S, SCEN, SHIFTS, index, load
+from gate import S, SCEN, SHIFTS, index, load
 
 ROOT = Path(__file__).resolve().parent
 from raw import RAW  # noqa: E402

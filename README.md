@@ -42,6 +42,9 @@ python -m pytest tests -q
 (https://github.com/SamirHossain099/beamrecal); set `BEAMRECAL_ROOT` to its checkout and `BEAMRECAL_CACHE` to
 its `data/cache`.
 
+The claim tests and the packaging guard run in CI on Python 3.11, 3.12 and 3.13; they read `results/` and need
+only `pytest`. The analysis itself was run on Python 3.12.
+
 ## Checking another recording
 
 Shift the positions within each pass by s rows, fit a position-to-beam predictor on training passes, score passes
