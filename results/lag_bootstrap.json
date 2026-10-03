@@ -1,0 +1,83 @@
+{
+ "1": {
+  "point": 1,
+  "frac_at_point": 0.975,
+  "frac_same_sign": 0.995,
+  "p5_p95": [
+   1,
+   1
+  ]
+ },
+ "2": {
+  "point": -3,
+  "frac_at_point": 0.57,
+  "frac_same_sign": 1.0,
+  "p5_p95": [
+   -4,
+   -3
+  ]
+ },
+ "3": {
+  "point": -6,
+  "frac_at_point": 1.0,
+  "frac_same_sign": 1.0,
+  "p5_p95": [
+   -6,
+   -6
+  ]
+ },
+ "4": {
+  "point": 1,
+  "frac_at_point": 0.97,
+  "frac_same_sign": 0.97,
+  "p5_p95": [
+   1,
+   1
+  ]
+ },
+ "5": {
+  "point": -5,
+  "frac_at_point": 0.745,
+  "frac_same_sign": 1.0,
+  "p5_p95": [
+   -5,
+   -4
+  ]
+ },
+ "6": {
+  "point": 3,
+  "frac_at_point": 1.0,
+  "frac_same_sign": 1.0,
+  "p5_p95": [
+   3,
+   3
+  ]
+ },
+ "7": {
+  "point": -2,
+  "frac_at_point": 0.835,
+  "frac_same_sign": 1.0,
+  "p5_p95": [
+   -2,
+   -1
+  ]
+ },
+ "8": {
+  "point": -2,
+  "frac_at_point": 0.33,
+  "frac_same_sign": 0.96,
+  "p5_p95": [
+   -4,
+   -1
+  ]
+ },
+ "9": {
+  "point": -2,
+  "frac_at_point": 0.515,
+  "frac_same_sign": 0.985,
+  "p5_p95": [
+   -3,
+   -1
+  ]
+ }
+}

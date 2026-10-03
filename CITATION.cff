@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+message: "If you use poslag, please cite it as below."
+title: "poslag: time offsets between position and beam rows in the DeepSense 6G dataset"
+abstract: >-
+  In several recordings of the DeepSense 6G real-world millimeter-wave dataset the GPS rows are offset in time
+  from the beam-power and camera rows by up to 0.85 s, constant within a recording. poslag measures the offset
+  with three estimates (held-out position-to-beam accuracy with the shift chosen on training sequences, the
+  residual of a beam-on-bearing fit, and the dataset's own bounding boxes against the positions, which needs no
+  beam label), locates it in the position stream, reproduces the position-aided baseline of Morais et al. and
+  reports what correcting the offset changes, with tests that pin every reported number to the released results.
+type: software
+authors:
+  - given-names: Samir
+    family-names: Hossain
+    orcid: "https://orcid.org/0009-0003-8986-0946"
+    affiliation: "Department of Electrical and Computer Engineering, Texas Tech University"
+version: 0.1.0
+license: MIT
+repository-code: "https://github.com/SamirHossain099/poslag"
+keywords:
+  - beam prediction
+  - millimeter wave
+  - GPS
+  - time synchronization
+  - dataset quality
+  - DeepSense 6G

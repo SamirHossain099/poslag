@@ -1,0 +1,324 @@
+{
+ "1": {
+  "row_dt_s": 0.125,
+  "dt_note": "median of 2382 within-sequence intervals",
+  "reference": "camera",
+  "pooled_lag_rows": 1,
+  "pooled_lag_s": 0.125,
+  "e1_gain": 0.012472447273888031,
+  "e1_s_star_rows": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "per_seq_n": 29,
+  "per_seq_median_rows": 1.0,
+  "per_seq_iqr_rows": [
+   1.0,
+   2.0
+  ],
+  "per_seq_frac_at_pooled": 0.41379310344827586,
+  "per_seq_frac_same_sign": 0.896551724137931
+ },
+ "2": {
+  "row_dt_s": 0.125,
+  "dt_note": "median of 2940 within-sequence intervals",
+  "reference": "camera",
+  "pooled_lag_rows": -3,
+  "pooled_lag_s": -0.375,
+  "e1_gain": 0.06671530422642372,
+  "e1_s_star_rows": [
+   -3,
+   -3,
+   -2,
+   -4,
+   -3
+  ],
+  "per_seq_n": 34,
+  "per_seq_median_rows": -4.0,
+  "per_seq_iqr_rows": [
+   -4.75,
+   -2.25
+  ],
+  "per_seq_frac_at_pooled": 0.20588235294117646,
+  "per_seq_frac_same_sign": 0.9705882352941176
+ },
+ "3": {
+  "row_dt_s": 0.142,
+  "dt_note": "median of 1435 within-sequence intervals",
+  "reference": "beam",
+  "pooled_lag_rows": -6,
+  "pooled_lag_s": -0.852,
+  "e1_gain": 0.06208546151090365,
+  "e1_s_star_rows": [
+   -3,
+   -6,
+   -6,
+   -5,
+   -3
+  ],
+  "per_seq_n": 27,
+  "per_seq_median_rows": -6.0,
+  "per_seq_iqr_rows": [
+   -6.0,
+   -6.0
+  ],
+  "per_seq_frac_at_pooled": 0.8148148148148148,
+  "per_seq_frac_same_sign": 1.0
+ },
+ "4": {
+  "row_dt_s": 0.142,
+  "dt_note": "median of 1795 within-sequence intervals",
+  "reference": "beam",
+  "pooled_lag_rows": 1,
+  "pooled_lag_s": 0.142,
+  "e1_gain": 0.013437952241283347,
+  "e1_s_star_rows": [
+   4,
+   3,
+   3,
+   4,
+   4
+  ],
+  "per_seq_n": 34,
+  "per_seq_median_rows": 0.5,
+  "per_seq_iqr_rows": [
+   0.0,
+   1.0
+  ],
+  "per_seq_frac_at_pooled": 0.29411764705882354,
+  "per_seq_frac_same_sign": 0.5
+ },
+ "5": {
+  "row_dt_s": 0.125,
+  "dt_note": "median of 2271 within-sequence intervals",
+  "reference": "camera",
+  "pooled_lag_rows": -5,
+  "pooled_lag_s": -0.625,
+  "e1_gain": 0.07991915031747024,
+  "e1_s_star_rows": [
+   -3,
+   -3,
+   -3,
+   -3,
+   -3
+  ],
+  "per_seq_n": 29,
+  "per_seq_median_rows": -5.0,
+  "per_seq_iqr_rows": [
+   -6.0,
+   -4.0
+  ],
+  "per_seq_frac_at_pooled": 0.27586206896551724,
+  "per_seq_frac_same_sign": 0.9655172413793104
+ },
+ "6": {
+  "row_dt_s": 0.1382,
+  "dt_note": "whole seconds only; interval = sequence duration / rows",
+  "reference": "camera",
+  "pooled_lag_rows": 3,
+  "pooled_lag_s": 0.415,
+  "e1_gain": 0.1314606413342358,
+  "e1_s_star_rows": [
+   2,
+   3,
+   2,
+   2,
+   2
+  ],
+  "per_seq_n": 11,
+  "per_seq_median_rows": 3.0,
+  "per_seq_iqr_rows": [
+   3.0,
+   3.0
+  ],
+  "per_seq_frac_at_pooled": 0.9090909090909091,
+  "per_seq_frac_same_sign": 1.0
+ },
+ "7": {
+  "row_dt_s": 0.2,
+  "dt_note": "median of 791 within-sequence intervals",
+  "reference": "camera",
+  "pooled_lag_rows": -2,
+  "pooled_lag_s": -0.4,
+  "e1_gain": -0.04342767295597483,
+  "e1_s_star_rows": [
+   -1,
+   0,
+   1,
+   0,
+   -1
+  ],
+  "per_seq_n": 2,
+  "per_seq_median_rows": -2.0,
+  "per_seq_iqr_rows": [
+   -2.0,
+   -2.0
+  ],
+  "per_seq_frac_at_pooled": 1.0,
+  "per_seq_frac_same_sign": 1.0
+ },
+ "8": {
+  "row_dt_s": 0.111,
+  "dt_note": "median of 3960 within-sequence intervals",
+  "reference": "camera",
+  "pooled_lag_rows": -2,
+  "pooled_lag_s": -0.222,
+  "e1_gain": 0.0022089180463813808,
+  "e1_s_star_rows": [
+   -1,
+   1,
+   0,
+   1,
+   -1
+  ],
+  "per_seq_n": 82,
+  "per_seq_median_rows": -2.0,
+  "per_seq_iqr_rows": [
+   -2.0,
+   -1.0
+  ],
+  "per_seq_frac_at_pooled": 0.4634146341463415,
+  "per_seq_frac_same_sign": 0.9390243902439024
+ },
+ "9": {
+  "row_dt_s": 0.111,
+  "dt_note": "median of 5828 within-sequence intervals",
+  "reference": "camera",
+  "pooled_lag_rows": -2,
+  "pooled_lag_s": -0.222,
+  "e1_gain": -0.007315992831129181,
+  "e1_s_star_rows": [
+   1,
+   1,
+   0,
+   0,
+   -1
+  ],
+  "per_seq_n": 136,
+  "per_seq_median_rows": -2.0,
+  "per_seq_iqr_rows": [
+   -3.0,
+   -1.0
+  ],
+  "per_seq_frac_at_pooled": 0.40441176470588236,
+  "per_seq_frac_same_sign": 0.9191176470588235
+ },
+ "31": {
+  "row_dt_s": 0.0921,
+  "dt_note": "median of 6919 within-sequence intervals",
+  "reference": "beam",
+  "pooled_lag_rows": -2,
+  "pooled_lag_s": -0.184,
+  "e1_gain": -0.0009821789500247479,
+  "e1_s_star_rows": [
+   1,
+   1,
+   0,
+   1,
+   1
+  ],
+  "per_seq_n": 52,
+  "per_seq_median_rows": -2.0,
+  "per_seq_iqr_rows": [
+   -3.0,
+   -2.0
+  ],
+  "per_seq_frac_at_pooled": 0.4423076923076923,
+  "per_seq_frac_same_sign": 0.9423076923076923
+ },
+ "32": {
+  "row_dt_s": 0.0917,
+  "dt_note": "median of 3202 within-sequence intervals",
+  "reference": "beam",
+  "pooled_lag_rows": 0,
+  "pooled_lag_s": 0.0,
+  "e1_gain": -0.005272001585246655,
+  "e1_s_star_rows": [
+   1,
+   0,
+   1,
+   1,
+   1
+  ],
+  "per_seq_n": 15,
+  "per_seq_median_rows": 0.0,
+  "per_seq_iqr_rows": [
+   -0.5,
+   0.5
+  ],
+  "per_seq_frac_at_pooled": 0.4666666666666667,
+  "per_seq_frac_same_sign": null
+ },
+ "33": {
+  "row_dt_s": 0.0918,
+  "dt_note": "median of 3941 within-sequence intervals",
+  "reference": "beam",
+  "pooled_lag_rows": -1,
+  "pooled_lag_s": -0.092,
+  "e1_gain": 0.002788762779464249,
+  "e1_s_star_rows": [
+   1,
+   1,
+   1,
+   0,
+   0
+  ],
+  "per_seq_n": 18,
+  "per_seq_median_rows": -1.0,
+  "per_seq_iqr_rows": [
+   -1.0,
+   -0.25
+  ],
+  "per_seq_frac_at_pooled": 0.5555555555555556,
+  "per_seq_frac_same_sign": 0.7222222222222222
+ },
+ "34": {
+  "row_dt_s": 0.0938,
+  "dt_note": "median of 4390 within-sequence intervals",
+  "reference": "beam",
+  "pooled_lag_rows": 2,
+  "pooled_lag_s": 0.188,
+  "e1_gain": 0.021414813005397982,
+  "e1_s_star_rows": [
+   1,
+   2,
+   2,
+   2,
+   2
+  ],
+  "per_seq_n": 31,
+  "per_seq_median_rows": 2.0,
+  "per_seq_iqr_rows": [
+   1.0,
+   2.5
+  ],
+  "per_seq_frac_at_pooled": 0.3225806451612903,
+  "per_seq_frac_same_sign": 0.8709677419354839
+ },
+ "35": {
+  "row_dt_s": 0.1,
+  "dt_note": "median of 2954 within-sequence intervals",
+  "reference": "beam",
+  "pooled_lag_rows": 2,
+  "pooled_lag_s": 0.2,
+  "e1_gain": -0.008266408009368042,
+  "e1_s_star_rows": [
+   2,
+   5,
+   1,
+   5,
+   -1
+  ],
+  "per_seq_n": 43,
+  "per_seq_median_rows": 1.0,
+  "per_seq_iqr_rows": [
+   0.0,
+   3.0
+  ],
+  "per_seq_frac_at_pooled": 0.18604651162790697,
+  "per_seq_frac_same_sign": 0.6744186046511628
+ }
+}
