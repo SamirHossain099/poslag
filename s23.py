@@ -65,7 +65,41 @@ def main():
         print(f"s23 {name:10s}: E1 {r['acc_s0']:.3f} -> {r['acc_s_star']:.3f} (gain {r['gain']:+.3f}), s* {r['s_star_folds']} "
               f"= {np.median(r['s_star_folds']) * row_dt:+.2f} s  [rows {out['rows']}, seqs {out['sequences']}, dt {row_dt*1000:.0f} ms]",
               flush=True)
+    out["camera"] = camera(d)
     (ROOT / "results" / "s23.json").write_text(json.dumps(out, indent=1))
+
+
+def box_xy():
+    """Centre (x, y) of the dataset's own drone box per row (class 0 in resources/bbox_labels_final; NaN if absent
+    or ambiguous)."""
+    df = pd.read_csv(BASE / "scenario23.csv")
+    bdir = BASE / "resources" / "bbox_labels_final"
+    out = []
+    for p in df["unit1_rgb"]:
+        f = bdir / (Path(str(p)).stem + ".txt")
+        rows = [r.split() for r in f.read_text().splitlines() if r.strip()] if f.exists() else []
+        rows = [r for r in rows if float(r[0]) == 0]
+        out.append((float(rows[0][1]), float(rows[0][2])) if len(rows) == 1 else (np.nan, np.nan))
+    return np.asarray(out)
+
+
+def camera(d):
+    """Which stream is offset: beam against the box (E1 on box x, y) and box against the GPS (fit residual)."""
+    bx = box_xy()
+    pos, L = gate.index(d["seq"])
+    base = np.flatnonzero((pos - 10 >= 0) & (pos + 10 < L) & (d["y"] >= 0) & np.isfinite(bx[:, 0]))
+    base = base[[np.isfinite(bx[i - 10:i + 11, 0]).all() for i in base]]
+    brg = np.degrees(np.unwrap(np.arctan2(d["gps"][:, 1], d["gps"][:, 0])))
+    elev = np.degrees(np.arctan2(d["h"], np.hypot(d["gps"][:, 0], d["gps"][:, 1])))
+    r = {"frames": int(len(base)), "box_present": float(np.isfinite(bx[:, 0]).mean()),
+         "boxx~gps_bearing": gate.pooled_lag(bx[:, 0], brg, d["seq"], base),
+         "boxy~gps_elev": gate.pooled_lag(bx[:, 1], elev, d["seq"], base),
+         "beam~box(xy)_E1": gate.e1({"gps": bx, "y": d["y"], "seq": d["seq"]}, base),
+         "beam~gps_E1_same_frames": gate.e1({"gps": d["gps"], "y": d["y"], "seq": d["seq"]}, base)}
+    print(f"s23 camera: beam~box s* {r['beam~box(xy)_E1']['s_star_folds']} acc {r['beam~box(xy)_E1']['acc_s0']:.3f}; "
+          f"box x ~ GPS bearing lag {r['boxx~gps_bearing']['lag']}; beam~gps s* {r['beam~gps_E1_same_frames']['s_star_folds']}",
+          flush=True)
+    return r
 
 
 if __name__ == "__main__":

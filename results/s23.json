@@ -43,6 +43,7 @@
  },
  "camera": {
   "frames": 10769,
+  "box_present": 1.0,
   "boxx~gps_bearing": {
    "lag": -2,
    "rms_at_lag": 0.143,
