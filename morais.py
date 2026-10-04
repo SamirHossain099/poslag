@@ -1,7 +1,7 @@
 """Does the published position-aided baseline move once the GPS offset is corrected?
 
 Re-implements the neural network of Morais, Behboodi, Pezeshki and Alkhateeb (arXiv 2205.09054, Table I): input the
-UE position min-max normalised, 3 hidden layers of 256 ReLU, 64-way output, batch 32, lr 1e-2 reduced x0.2 at epochs
+UE position min-max normalised and quantised in 200 bins per coordinate, 3 hidden layers of 256 ReLU, 64-way output, batch 32, lr 1e-2 reduced x0.2 at epochs
 20 and 40, 60 epochs, split 60/20/20, best validation epoch kept. Their published top-1 (Table II) is the target
 for the uncorrected run.
 
@@ -12,22 +12,29 @@ Splits: "sample" (random rows, as the paper appears to do: neighbouring frames o
 "sequence" (whole passes held out). Corrected and uncorrected runs use the same frames (rows whose t + lag stays
 inside the sequence) and the same split.
 
-    python morais.py
+    python morais.py [seed ...]          (default seeds 0-9)
 Writes results/morais.json.
 """
 import json
+import os
+import sys
 from pathlib import Path
 
-import numpy as np
-import torch
-import torch.nn as nn
+os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")       # deterministic cuBLAS, so reruns repeat
+import numpy as np  # noqa: E402
+import torch  # noqa: E402
+import torch.nn as nn  # noqa: E402
 
-from gate import index
-from raw import load_raw
+from gate import index  # noqa: E402
+from raw import load_raw  # noqa: E402
+
+torch.use_deterministic_algorithms(True)
 
 ROOT = Path(__file__).resolve().parent
 PUBLISHED = {1: 55.57, 2: 48.86, 3: 31.09, 4: 29.14, 5: 43.12, 6: 41.51, 7: 27.82, 8: 43.65, 9: 38.73}
-DEV = "cuda" if torch.cuda.is_available() else "cpu"
+DEV = "cpu"                                                  # this small network trains faster on the CPU than the GPU
+torch.set_num_threads(4)
+BINS = 200                                                   # Morais et al. quantise the normalised input in 200 bins
 
 
 def mlp():
@@ -38,7 +45,8 @@ def mlp():
 def train_eval(X, y, pwr_loss, tr, va, te, seed):
     torch.manual_seed(seed)
     lo, hi = X[tr].min(0), X[tr].max(0)
-    Xn = torch.as_tensor((X - lo) / (hi - lo + 1e-12), dtype=torch.float32, device=DEV)
+    Xq = np.clip(np.floor((X - lo) / (hi - lo + 1e-12) * BINS), 0, BINS - 1) / (BINS - 1)
+    Xn = torch.as_tensor(Xq, dtype=torch.float32, device=DEV)
     Y = torch.as_tensor(y, dtype=torch.long, device=DEV)
     m = mlp()
     opt = torch.optim.Adam(m.parameters(), lr=1e-2)
@@ -69,7 +77,7 @@ def train_eval(X, y, pwr_loss, tr, va, te, seed):
     return top1, pl
 
 
-def main(seeds=(0, 1, 2)):
+def main(seeds=tuple(range(10))):
     lags = json.loads((ROOT / "results" / "raw_lags.json").read_text())
     res = {}
     for s in range(1, 10):
@@ -105,7 +113,8 @@ def main(seeds=(0, 1, 2)):
             r0, r1 = np.array(r0), np.array(r1)
             out[split] = {"top1_uncorrected": r0[:, 0].mean() * 100, "top1_corrected": r1[:, 0].mean() * 100,
                           "pl_db_uncorrected": r0[:, 1].mean(), "pl_db_corrected": r1[:, 1].mean(),
-                          "top1_runs": [[round(a * 100, 2), round(b * 100, 2)] for a, b in zip(r0[:, 0], r1[:, 0])]}
+                          "top1_runs": [[round(a * 100, 2), round(b * 100, 2)] for a, b in zip(r0[:, 0], r1[:, 0])],
+                          "pl_runs": [[round(a, 4), round(b, 4)] for a, b in zip(r0[:, 1], r1[:, 1])], "seeds": list(seeds)}
         res[s] = out
         a, b = out["sample"], out["sequence"]
         print(f"s{s} lag {lag:+d} | published {PUBLISHED[s]:.1f} | sample split {a['top1_uncorrected']:.1f} -> "
@@ -125,4 +134,4 @@ def _pwr_paths(s, rows):
 
 
 if __name__ == "__main__":
-    main()
+    main(tuple(int(a) for a in sys.argv[1:]) or tuple(range(10)))

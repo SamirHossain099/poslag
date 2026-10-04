@@ -5,10 +5,11 @@ within +-1 beam) fitted on the training rows and scored on the validation rows; 
 so s = 0 unless a shift wins); then train the Morais et al. network at s = 0 and at the chosen s and score both on the
 test rows. Only training and validation labels are used to choose. Scenarios 1-9 and 23.
 
-    python rule.py
+    python rule.py [seed ...]            (default seeds 0-9)
 Writes results/rule.json.
 """
 import json
+import sys
 from pathlib import Path
 
 import numpy as np
@@ -45,7 +46,7 @@ def knn_val(X, y, tr, va):
     return float((np.abs(clf.predict(X[va]) - y[va]) <= 1).mean())
 
 
-def main(seeds=(0, 1, 2)):
+def main(seeds=tuple(range(10))):
     res = {}
     for s in [1, 2, 3, 4, 5, 6, 7, 8, 9, 23]:
         g, yf, seq_all, paths = data(s)
@@ -59,7 +60,7 @@ def main(seeds=(0, 1, 2)):
         Xs = {k: g[rows + k] for k in SHIFTS}
         out = {"n": int(len(rows)), "published_top1": PUBLISHED.get(s)}
         for split in ("sample", "sequence"):
-            runs = []
+            runs, v_all = [], []
             for sd in seeds:
                 rng = np.random.default_rng(sd)
                 if split == "sample":
@@ -72,6 +73,7 @@ def main(seeds=(0, 1, 2)):
                                   np.flatnonzero(~np.isin(seq, np.r_[a, b])))
                 v = {k: knn_val(Xs[k], y, tr, va) for k in SHIFTS}
                 k_star = max(SHIFTS, key=lambda k: (v[k], -abs(k)))
+                v_all.append({str(k): round(x, 4) for k, x in v.items()})
                 t0, p0 = train_eval(Xs[0], y, pl, tr, va, te, sd)
                 t1, p1 = (t0, p0) if k_star == 0 else train_eval(Xs[k_star], y, pl, tr, va, te, sd)
                 runs.append({"shift": k_star, "top1_0": t0 * 100, "top1_rule": t1 * 100, "pl_0": p0, "pl_rule": p1})
@@ -79,7 +81,8 @@ def main(seeds=(0, 1, 2)):
                           "top1_uncorrected": float(np.mean([r["top1_0"] for r in runs])),
                           "top1_rule": float(np.mean([r["top1_rule"] for r in runs])),
                           "pl_db_uncorrected": float(np.mean([r["pl_0"] for r in runs])),
-                          "pl_db_rule": float(np.mean([r["pl_rule"] for r in runs])), "runs": runs}
+                          "pl_db_rule": float(np.mean([r["pl_rule"] for r in runs])), "runs": runs,
+                          "val_knn": v_all, "seeds": list(seeds)}
         res[s] = out
         a, b = out["sample"], out["sequence"]
         print(f"s{s:2d} | sample: shifts {a['shifts']} top1 {a['top1_uncorrected']:.1f} -> {a['top1_rule']:.1f} "
@@ -90,4 +93,4 @@ def main(seeds=(0, 1, 2)):
 
 
 if __name__ == "__main__":
-    main()
+    main(tuple(int(a) for a in sys.argv[1:]) or tuple(range(10)))

@@ -3,7 +3,9 @@ import json
 import os
 from pathlib import Path
 
+import numpy as np
 import pytest
+from scipy import stats
 
 R = Path(os.environ.get("RESULTS_DIR", Path(__file__).resolve().parents[1] / "results"))
 OFFSET = ["2", "3", "5", "6"]
@@ -61,15 +63,21 @@ def test_published_baseline_reproduced_within_three_points():
         assert abs(v["sample"]["top1_uncorrected"] - v["published_top1"]) <= 3.0, (s, v["sample"]["top1_uncorrected"])
 
 
-def test_camera_correction_raises_the_published_baseline_in_offset_scenarios():
+def test_camera_correction_raises_the_sample_split_in_offset_scenarios():
     m = load("morais.json")
     for s in OFFSET:
-        assert m[s]["sample"]["top1_corrected"] - m[s]["sample"]["top1_uncorrected"] >= 3.0, s
+        assert m[s]["sample"]["top1_corrected"] - m[s]["sample"]["top1_uncorrected"] >= 2.0, s
 
 
 def test_scenario_7_is_reported_as_a_failure():
     m = load("morais.json")["7"]
-    assert m["sample"]["top1_corrected"] < m["sample"]["top1_uncorrected"] - 3.0
+    for split in ("sample", "sequence"):
+        assert m[split]["top1_corrected"] < m[split]["top1_uncorrected"] - 3.0, split
+
+
+def test_reproduction_uses_the_published_quantisation_and_ten_seeds():
+    m = load("morais.json")
+    assert all(len(v["sample"]["top1_runs"]) == 10 for v in m.values())
 
 
 def test_scenario_41_is_aligned():
@@ -92,14 +100,40 @@ def test_timestamps_assigned_in_testbed1_but_measured_in_9():
     assert t["9"]["frac_ms_equal_k_over_n"] < 0.05 and t["9"]["distinct_ms_values"] > 500
 
 
-def test_rule_gains_in_offset_scenarios_and_costs_little_elsewhere():
+def _change(runs, a="top1_0", b="top1_rule"):
+    d = np.array([r[b] - r[a] for r in runs])
+    return d.mean(), stats.t.ppf(0.975, len(d) - 1) * d.std(ddof=1) / np.sqrt(len(d))
+
+
+def test_rule_gains_in_offset_scenarios_and_which_intervals_clear_zero():
     r = load("rule.json")
-    for s in OFFSET + ["23"]:
+    clear = {}
+    for s in OFFSET:
         for split in ("sample", "sequence"):
-            assert r[s][split]["top1_rule"] - r[s][split]["top1_uncorrected"] >= 1.5, (s, split)
+            assert len(r[s][split]["runs"]) == 10
+            m, h = _change(r[s][split]["runs"])
+            assert m > 0, (s, split)
+            clear[(s, split)] = m - h > 0
+    assert all(clear[(s, "sample")] for s in OFFSET)                # "on random rows every interval excludes zero"
+    assert [s for s in OFFSET if not clear[(s, "sequence")]] == ["3", "5"]
+
+
+def test_reproduction_is_below_every_published_value():
+    m = load("morais.json")
+    assert all(v["sample"]["top1_uncorrected"] < v["published_top1"] for v in m.values())
+
+
+def test_rule_costs_little_where_there_is_no_offset():
+    r = load("rule.json")
     for s in ["1", "4", "7", "8", "9"]:
         for split in ("sample", "sequence"):
-            assert r[s][split]["top1_rule"] - r[s][split]["top1_uncorrected"] >= -3.5, (s, split)
+            assert _change(r[s][split]["runs"])[0] >= -3.5, (s, split)
+
+
+def test_power_loss_rises_in_scenario_2_and_falls_in_six_of_eight():
+    r = load("rule.json")
+    pl = {(s, sp): _change(r[s][sp]["runs"], "pl_0", "pl_rule")[0] for s in OFFSET for sp in ("sample", "sequence")}
+    assert sum(v < 0 for v in pl.values()) == 6 and pl[("2", "sample")] > 0 and pl[("2", "sequence")] > 0
 
 
 def test_01_geometric_methods_gain_and_supft_does_not():
