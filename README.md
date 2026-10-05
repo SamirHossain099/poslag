@@ -1,5 +1,7 @@
 # poslag
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23149346.svg)](https://doi.org/10.5281/zenodo.23149346)
+
 Time offsets between the position rows and the beam and camera rows of the DeepSense 6G dataset: how to measure
 them, which stream carries them, and what correcting them does to position-aided beam prediction.
 
