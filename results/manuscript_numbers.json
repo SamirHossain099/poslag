@@ -287,6 +287,18 @@
   "value": 4,
   "text": "+4"
  },
+ "guard_aff": {
+  "value": 100.0,
+  "text": "100"
+ },
+ "guard_clean": {
+  "value": 0.0,
+  "text": "0"
+ },
+ "guard1_s5": {
+  "value": 30.0,
+  "text": "30"
+ },
  "n_seeds": {
   "value": 10,
   "text": "10"

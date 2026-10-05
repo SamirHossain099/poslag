@@ -142,6 +142,18 @@ def main():
     s4 = shifts["4"]
     put("s4_shift_lo", min(s4), f(min(s4), 0, True))
     put("s4_shift_hi", max(s4), f(max(s4), 0, True))
+    # the camera guard for the rule (Section 4): keep a run's shift only if the camera lag has its sign and is >= 3 rows
+    camlag = {s: (raw[s]["gps_cal"] if "gps_cal" in raw[s] else raw[s]["gps"])["cam~gps"]["lag"] for s in aff + clean}
+
+    def kept(s, guard):
+        return [guard(r["shift"], camlag[s]) for sp in ("sample", "sequence") for r in rule[s][sp]["runs"]]
+    g3 = lambda k, c: k != 0 and np.sign(k) == np.sign(c) and abs(c) >= 3          # noqa: E731
+    g1 = lambda k, c: k != 0 and np.sign(k) == np.sign(c) and abs(k - c) <= 1      # noqa: E731
+    put("guard_aff", float(np.mean([x for s in aff for x in kept(s, g3)])) * 100,
+        f(float(np.mean([x for s in aff for x in kept(s, g3)])) * 100, 0))
+    put("guard_clean", float(np.mean([x for s in clean for x in kept(s, g3)])) * 100,
+        f(float(np.mean([x for s in clean for x in kept(s, g3)])) * 100, 0))
+    put("guard1_s5", float(np.mean(kept("5", g1))) * 100, f(float(np.mean(kept("5", g1))) * 100, 0))
     put("n_seeds", len(rule["2"]["sample"]["seeds"]), str(len(rule["2"]["sample"]["seeds"])))
 
     # 01, three seeds

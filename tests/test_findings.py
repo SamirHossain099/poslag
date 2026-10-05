@@ -153,3 +153,19 @@ def test_01_gain_holds_in_every_seed():
         assert c["calib+gate+norm"]["mean"]["top1"] - a["calib+gate+norm"]["mean"]["top1"] >= 0.05, name
         assert a["supft"]["mean"]["top1"] > a["calib+supft"]["mean"]["top1"], name          # as published, supft led
         assert c["calib+supft"]["mean"]["top1"] > c["supft"]["mean"]["top1"], name          # corrected, it does not
+
+
+def test_camera_guard_keeps_every_real_shift_and_no_other():
+    r, raw = load("rule.json"), load("raw_lags.json")
+    cam = {s: (raw[s]["gps_cal"] if "gps_cal" in raw[s] else raw[s]["gps"])["cam~gps"]["lag"] for s in "123456789"}
+
+    def kept(s, close=None):
+        out = []
+        for sp in ("sample", "sequence"):
+            for run in r[s][sp]["runs"]:
+                k, c = run["shift"], cam[s]
+                ok = k != 0 and np.sign(k) == np.sign(c)
+                out.append(ok and (abs(k - c) <= close if close is not None else abs(c) >= 3))
+        return out
+    assert all(x for s in OFFSET for x in kept(s)) and not any(x for s in "14789" for x in kept(s))
+    assert np.mean(kept("5", close=1)) < 0.5                      # one-row agreement would drop most of scenario 5
